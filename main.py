@@ -15,16 +15,14 @@ BANNED_KEYWORDS =[
     "bpreport"#
 ]
 files = []
-def Steam_Files() -> list:
-    Steam_directory = Path('/mnt/d/steam/steamapps/common/')
-    for folder in Steam_directory.iterdir():
+def Get_Files(software_path) -> list:
+    directory = Path(f'{software_path}')
+    for folder in directory.iterdir():
         if not folder.is_dir():
             return list() #empty list if the dir dosen't exits
         files.append(folder)
     return files
 
-#def Epic_Files():
-#def Battlenet_Files():
 
 def itererate_steam_files() -> list:
     games_exe = []
@@ -53,8 +51,22 @@ def file_to_sh(game_exe : list) -> None:
         subprocess.run(f"chmod +x '{sh_path}'", shell=True)
     print(f"Done! Files saved to {save_folder}")
 
+def Userinput() -> None:
+    while True:
+        choice : str = str(input("1-Steam\n2-Epic\npick one: ")).lower()
+        match choice:
+            case "steam" | "1":
+                Get_Files(input("Enter Steam Games Folder Path: "))
+                break
+            case "epic" | "2":
+                Get_Files(input("Enter Epic Games Folder Path: "))
+                break
+            case _:
+                print("Invaid selection")
+
+        
 def main():
-    Steam_Files()
+    Userinput()
     games = itererate_steam_files()
     file_to_sh(games)
 
