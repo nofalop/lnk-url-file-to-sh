@@ -25,10 +25,9 @@ Run the script:
 ```bash
 python3 url_to_bat.py
 ```
-this will generate a .sh file t the games you have in your directory 
-automaticly in the directory you put in
-the run
+this will generate a .sh file in your directory 
+automaticly.
+to run the game
 ```bash
 ./game_name
 ```
-the will start
