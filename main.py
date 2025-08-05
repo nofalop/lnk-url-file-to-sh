@@ -15,11 +15,11 @@ BANNED_KEYWORDS =[
     "bpreport"#
 ]
 files = []
-def Steam_files() -> list:
+def Steam_Files() -> list:
     Steam_directory = Path('/mnt/d/steam/steamapps/common/')
     for folder in Steam_directory.iterdir():
         if not folder.is_dir():
-            return "Invalid dir"
+            return list() #empty list if the dir dosen't exits
         files.append(folder)
     return files
 
@@ -53,7 +53,10 @@ def file_to_sh(game_exe : list) -> None:
         subprocess.run(f"chmod +x '{sh_path}'", shell=True)
     print(f"Done! Files saved to {save_folder}")
 
-if __name__ == "__main__":
-    Steam_files()
+def main():
+    Steam_Files()
     games = itererate_steam_files()
     file_to_sh(games)
+
+if __name__ == "__main__":
+    main()
