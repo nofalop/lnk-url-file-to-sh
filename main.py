@@ -15,6 +15,7 @@ BANNED_KEYWORDS =[
     "bpreport"#
 ]
 files = []
+#GLOBAL FILES
 def Get_Files(software_path) -> list:
     directory = Path(f'{software_path}')
     for folder in directory.iterdir():
@@ -23,13 +24,29 @@ def Get_Files(software_path) -> list:
         files.append(folder)
     return files
 
+#EPIC GAMES FILES
+def Get_Epic_Files(folders : Path) -> list:
+    games_epic = []
+    for folder in folders.rglob(".exe"):
+        for files in folder.iterdir():
+            if files.is_file() and files.suffix == ".exe":
+                if any(keyword in files.name.lower() for keyword in BANNED_KEYWORDS):
+                    continue
+                games_epic.append(files)
+    return games_epic
 
-def itererate_steam_files() -> list:
+#
+def itererate_files() -> list:
     games_exe = []
     for folder_path in files:
         folder = Path(folder_path)
         if not folder.is_dir():
             continue
+        
+        #if the user chooses Epic games 
+        if "Epic\\ Games/" in str(folder):
+            games_exe = Get_Epic_Files(folder)
+            return games_exe
         
         for game_exe in folder.iterdir():
             if game_exe.is_file() and game_exe.suffix == ".exe":
@@ -67,7 +84,7 @@ def Userinput() -> None:
         
 def main():
     Userinput()
-    games = itererate_steam_files()
+    games = itererate_files()
     file_to_sh(games)
 
 if __name__ == "__main__":
