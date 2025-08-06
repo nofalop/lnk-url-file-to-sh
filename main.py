@@ -1,18 +1,27 @@
 from pathlib import Path
 import subprocess
+import re
 
 save_folder = Path("/mnt/c/Users/L-G/OneDrive/Desktop/Games") #this is where it saves the .sh files
 save_folder.mkdir(parents=True, exist_ok=True)  # make sure folder exists
 
-BANNED_KEYWORDS =[
+BANNED_KEYWORDS = [
     "unitycrashhandler32",
     "unitycrashhandler64",
     "svends",
     "wallpaper32",
     "installer",
-    "gaijin_downloader",# these are Crossout exe's
-    "gjagent",#
-    "bpreport"#
+    "gaijin_downloader",
+    "gjagent",
+    "bpreport",
+    "crashreportclient",
+    "epicwebhelper",
+    "win64",
+    "uninstallhelper",
+    "easyanticheat",
+    "setup",
+    "crashreportclient",
+    "epicwebhelper"
 ]
 files = []
 #GLOBAL FILES
@@ -27,12 +36,17 @@ def Get_Files(software_path) -> list:
 #EPIC GAMES FILES
 def Get_Epic_Files(folders : Path) -> list:
     games_epic = []
-    for folder in folders.rglob(".exe"):
-        for files in folder.iterdir():
-            if files.is_file() and files.suffix == ".exe":
-                if any(keyword in files.name.lower() for keyword in BANNED_KEYWORDS):
-                    continue
-                games_epic.append(files)
+    for files in folders.rglob("*.exe"):
+        if not files.is_file():
+            continue
+        
+        lowered_name = files.name.lower()
+        # splits the dir if in contains - or _ then checks if it has one of the banned words
+        name_parts = re.split("[-_.]", lowered_name)
+        print(name_parts)
+        if any(keyword in name_parts for keyword in BANNED_KEYWORDS):
+            continue
+        games_epic.append(files)
     return games_epic
 
 #
@@ -44,9 +58,8 @@ def itererate_files() -> list:
             continue
         
         #if the user chooses Epic games 
-        if "Epic\\ Games/" in str(folder):
-            games_exe = Get_Epic_Files(folder)
-            return games_exe
+        if "Epic Games" in str(folder):
+            return Get_Epic_Files(folder)
         
         for game_exe in folder.iterdir():
             if game_exe.is_file() and game_exe.suffix == ".exe":
