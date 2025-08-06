@@ -53,10 +53,15 @@ def itererate_files() -> list:
                 if any(keyword in game_exe.name.lower() for keyword in BANNED_KEYWORDS):
                     continue
                 games_exe.append(game_exe)
+            
     return games_exe
             
 
 def file_to_sh(game_exe : list) -> None:
+    if len(game_exe) <= 0:
+        print("no exe files")
+        return
+
     for game in game_exe:
         sh_name = game.stem + ".sh"
         sh_path = save_folder / sh_name
